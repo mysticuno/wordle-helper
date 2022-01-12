@@ -1,7 +1,7 @@
 // Wordle Solver
-import { ANSWER_WORDS } from "./wordlist";
+// import { ANSWER_WORDS } from "./wordlist";
 
-// Set util for intersections
+// Util for set intersections
 function intersection(setA, setB) {
     let _intersection = new Set()
     for (let elem of setB) {
@@ -82,3 +82,12 @@ function getPossibleWords({
     correct = getWordsWithCorrectLetters(correctLetters);
     return intersection(present, intersection(correct, absent));
 }
+
+// console.log('content? doc', document)
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log('req', request, 'word', ANSWER_WORDS[0], sender, sendResponse)
+    console.log(localStorage.gameState)
+    sendResponse({word: ANSWER_WORDS[0]})
+    return true;
+});

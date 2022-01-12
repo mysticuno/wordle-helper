@@ -16,5 +16,11 @@
             "128": "/images/get_started128.png"
           }
     },
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "content_scripts": [
+        {
+            "matches": ["https://www.powerlanguage.co.uk/wordle/*"],
+            "js": ["./util/wordlist.js", "./util/solver.js"]
+        }
+    ]
   }
