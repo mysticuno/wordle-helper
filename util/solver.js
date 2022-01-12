@@ -54,6 +54,7 @@ function getWordsWithoutAbsentLetters(absentLetters = []) {
     }));
 }
 
+// Simulate one turn of Wordle
 function gameResult(answer, guess, gameState = {
     absentLetters: new Set(),
     presentLetters: new Set(),
@@ -83,11 +84,45 @@ function getPossibleWords({
     return intersection(present, intersection(correct, absent));
 }
 
-// console.log('content? doc', document)
+function solve(gameState = {}) {
+    let {boardState=[], evaluations=[], solution=''} = JSON.parse(window.localStorage.gameState);
+    let state = {absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' ']}
+    for (let [guessNum, guess] of boardState.entries()) {
+      if (guess === '') continue;
+      for (let [index, evaluation] of evaluations[guessNum].entries()) {
+        let letter = guess[index];
+        switch (evaluation) {
+          case "correct":
+            state.correctLetters[index] = letter;
+            break;
+          case "present":
+            state.presentLetters.add(letter);
+            break;
+          case "absent":
+            state.absentLetters.add(letter)
+            break;
+        }
+      }
+    }
+    console.log('solution state', state);
+    let possible = getPossibleWords(state);
+    console.log(possible);
+    return Array.from(possible);
+}
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('req', request, 'word', ANSWER_WORDS[0], sender, sendResponse)
-    console.log(localStorage.gameState)
-    sendResponse({word: ANSWER_WORDS[0]})
-    return true;
+    let gameState;
+    try {
+        gameState = JSON.parse(localStorage.gameState);
+        console.log('Game State', gameState);
+        let [suggestion, ...possible] = solve(gameState);
+        possible = possible || [suggestion];
+        console.log(`sug ${suggestion} poss ${possible}`)
+        console.log('req', request, 'word', ANSWER_WORDS[0], sender, sendResponse)
+        console.log(localStorage.gameState)
+        sendResponse({suggestion, possible})
+    } catch (e) {
+        console.error("encountered JSON parse error", e);
+    }
 });
