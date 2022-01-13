@@ -1,23 +1,3 @@
-// importScripts('./util/wordlist.js', './util/solver.js')
-
-chrome.action.onClicked.addListener((tab) => {
-  console.log('ext clicked?', tab)
-})
-
-// chrome.commands.onCommand.addListener((command) => {
-//   console.log("got command", command);
-//   switch (command) {
-//     case 'get-possible-words':
-//       let words = getPossibleWords();
-//       console.log("words", words);
-//       break;
-//     default:
-//       console.log(`${command} not found`)
-//   }
-// });
-
-
-
 let color = '#3aa757';
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -25,3 +5,17 @@ chrome.runtime.onInstalled.addListener(() => {
   console.log('Default background color set to %cgreen', `color: ${color}`);
   // console.log("possible", getPossibleWords);
 });
+
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension", sender);
+    if (sender.tab) {
+      console.log('request', request);
+      chrome.action.setBadgeText({text: `${request.length}`, tabId: sender.tab.id})
+    }
+    return true;
+  }
+);

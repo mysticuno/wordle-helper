@@ -111,13 +111,28 @@ function solve(gameState = {}) {
 }
 
 
+
+console.log('doc',solve(JSON.parse(localStorage.gameState)))
+// chrome.action.setBadgeText({text: 'test'})
+// console.log(chrome)
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        let sol = solve(JSON.parse(localStorage.gameState));
+        console.log('call solve?', e,sol, chrome)
+        chrome.runtime.sendMessage(sol, function(response) {
+            console.log('resp', response)
+        })
+    }
+})
+
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     let gameState;
     try {
         gameState = JSON.parse(localStorage.gameState);
         console.log('Game State', gameState);
-        let [suggestion, ...possible] = solve(gameState);
-        possible = possible || [suggestion];
+        let possible = solve(gameState);
+        let suggestion = possible[0];
         console.log(`sug ${suggestion} poss ${possible}`)
         console.log('req', request, 'word', ANSWER_WORDS[0], sender, sendResponse)
         console.log(localStorage.gameState)
