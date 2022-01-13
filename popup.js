@@ -1,13 +1,18 @@
 // When the popup is clicked, run 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log("DOM loaded")
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  let res = chrome.tabs.sendMessage(tab.id, {
-    tabTitle: tab.title
-  }, res => {
-    console.log('res from background', res)
+  console.log("Popup DOM loaded")
+  const numWords = document.getElementById('numWords');
+  const possibleHTML = document.getElementById('possible');
 
-    chrome.action.setBadgeText({text: `${res.possible.length || 1}`, tabId: tab.id})
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log('sending message from popup.js')
+  await chrome.tabs.sendMessage(tab.id, {
+    tabTitle: tab.title
+  }, ({suggestion, possible}) => {
+    console.log('res from background.js', possible, suggestion);
+    numWords.innerHTML = `<b>${possible.length}</b>`;
+    possibleHTML.innerHTML = possible.join(', ');
+    chrome.action.setBadgeText({text: `${possible.length || 1}`, tabId: tab.id})
 
   });
 })

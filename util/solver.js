@@ -99,7 +99,10 @@ function solve(gameState = {}) {
             state.presentLetters.add(letter);
             break;
           case "absent":
-            state.absentLetters.add(letter)
+            // edge case with multiple letters
+            if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
+                state.absentLetters.add(letter)
+            }
             break;
         }
       }
@@ -118,7 +121,7 @@ console.log('doc',solve(JSON.parse(localStorage.gameState)))
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
         let sol = solve(JSON.parse(localStorage.gameState));
-        console.log('call solve?', e,sol, chrome)
+        console.log('sending message from solver content script', e,sol, chrome)
         chrome.runtime.sendMessage(sol, function(response) {
             console.log('resp', response)
         })

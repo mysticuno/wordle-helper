@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(
                 "from a content script:" + sender.tab.url :
                 "from the extension", sender);
     if (sender.tab) {
-      console.log('request', request);
+      console.log('request in background.js', request);
       chrome.action.setBadgeText({text: `${request.length}`, tabId: sender.tab.id})
     }
     return true;
