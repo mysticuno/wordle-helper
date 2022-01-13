@@ -1,27 +1,17 @@
-/* idk proper css soz*/
 body {
-  flex: auto;
-  width: 250px;
-}
-
-.numWords {
-  display: inline;
-}
-
-h3, p {
-  float: left;
-  padding-left: 3px;
-  margin-top: auto;
-}
-
-.wrapper {
-  clear: both;
-}
-
-#possibleLabel {
-  width: 100%;
+  color: #538d4e;
+  width: 300px;
+  font-size: 16px;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 #possible {
-  margin: 4px;
+  padding: 0px 10px 10px 10px;
+  font-size: 22px;
 }

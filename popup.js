@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   await chrome.tabs.sendMessage(tab.id, {}, ({ possible }) => {
-    numWords.innerHTML = `<b>${possible.length}</b>`;
-    possibleHTML.innerHTML = possible.join(', ').toUpperCase();
+    numWords.innerHTML = `${possible.length} possible word${possible.length > 1 ? 's' : ''}`;
+    const suggestions = possible.map(word => `${word.toUpperCase()}`).join(', ');
+    possibleHTML.innerHTML = suggestions;
     chrome.action.setBadgeText({ text: `${possible.length || 1}`, tabId: tab.id })
   });
 })
