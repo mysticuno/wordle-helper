@@ -1,9 +1,9 @@
 // Util for set intersections
 function intersection(setA, setB) {
-    let _intersection = new Set()
+    let _intersection = new Set();
     for (let elem of setB) {
         if (setA.has(elem)) {
-            _intersection.add(elem)
+            _intersection.add(elem);
         }
     }
     return _intersection
@@ -84,7 +84,7 @@ function getPossibleWords({
 // Given the game state, compute the list of possible words
 function solve() {
     let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState);
-    let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] }
+    let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] };
     for (let [guessNum, guess] of boardState.entries()) {
         if (guess === '') continue;
         for (let [index, evaluation] of evaluations[guessNum].entries()) {
@@ -99,7 +99,7 @@ function solve() {
                 case "absent":
                     // edge case with multiple letters
                     if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
-                        state.absentLetters.add(letter)
+                        state.absentLetters.add(letter);
                     }
                     break;
             }
@@ -111,7 +111,7 @@ function solve() {
 // Listen to keyboard enters to update
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
-        chrome.runtime.sendMessage(solve())
+        chrome.runtime.sendMessage(solve());
     }
 })
 
@@ -119,7 +119,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     try {
         let possible = solve();
         let suggestion = possible[0];
-        sendResponse({ suggestion, possible })
+        sendResponse({ suggestion, possible });
     } catch (e) {
         console.error("encountered JSON parse error", e);
     }

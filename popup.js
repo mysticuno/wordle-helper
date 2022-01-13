@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     numWords.innerHTML = `${possible.length} possible word${possible.length > 1 ? 's' : ''}`;
     const suggestions = possible.map(word => `${word.toUpperCase()}`).join(', ');
     possibleHTML.innerHTML = suggestions;
-    chrome.action.setBadgeText({ text: `${possible.length || 1}`, tabId: tab.id })
+    chrome.action.setBadgeText({ text: `${possible.length || 1}`, tabId: tab.id });
+    chrome.action.setBadgeBackgroundColor({ color: '#538d4e' });
   });
 })
