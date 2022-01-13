@@ -1,6 +1,3 @@
-// Wordle Solver
-// import { ANSWER_WORDS } from "./wordlist";
-
 // Util for set intersections
 function intersection(setA, setB) {
     let _intersection = new Set()
@@ -54,14 +51,14 @@ function getWordsWithoutAbsentLetters(absentLetters = []) {
     }));
 }
 
-// Simulate one turn of Wordle
+// Simulate one turn of Wordle, useful for testing
 function gameResult(answer, guess, gameState = {
     absentLetters: new Set(),
     presentLetters: new Set(),
     correctLetters: [' ', ' ', ' ', ' ', ' '] // default to empty
 }) {
     for (let [index, letter] of guess.split('').entries()) {
-        if (!(answer.includes(letter))){
+        if (!(answer.includes(letter))) {
             gameState.absentLetters.add(letter);
         } else if (answer[index] === letter) {
             gameState.correctLetters[index] = letter;
@@ -84,63 +81,49 @@ function getPossibleWords({
     return intersection(present, intersection(correct, absent));
 }
 
-function solve(gameState = {}) {
-    let {boardState=[], evaluations=[], solution=''} = JSON.parse(window.localStorage.gameState);
-    let state = {absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' ']}
+// Given the game state, compute the list of possible words
+function solve() {
+    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState);
+    let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] }
     for (let [guessNum, guess] of boardState.entries()) {
-      if (guess === '') continue;
-      for (let [index, evaluation] of evaluations[guessNum].entries()) {
-        let letter = guess[index];
-        switch (evaluation) {
-          case "correct":
-            state.correctLetters[index] = letter;
-            break;
-          case "present":
-            state.presentLetters.add(letter);
-            break;
-          case "absent":
-            // edge case with multiple letters
-            if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
-                state.absentLetters.add(letter)
+        if (guess === '') continue;
+        for (let [index, evaluation] of evaluations[guessNum].entries()) {
+            let letter = guess[index];
+            switch (evaluation) {
+                case "correct":
+                    state.correctLetters[index] = letter;
+                    break;
+                case "present":
+                    state.presentLetters.add(letter);
+                    break;
+                case "absent":
+                    // edge case with multiple letters
+                    if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
+                        state.absentLetters.add(letter)
+                    }
+                    break;
             }
-            break;
         }
-      }
     }
-    console.log('solution state', state);
-    let possible = getPossibleWords(state);
-    console.log(possible);
-    return Array.from(possible);
+    return Array.from(getPossibleWords(state));
 }
 
-
-
-console.log('doc',solve(JSON.parse(localStorage.gameState)))
-// chrome.action.setBadgeText({text: 'test'})
-// console.log(chrome)
+// Listen to keyboard enters to update
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
-        let sol = solve(JSON.parse(localStorage.gameState));
-        console.log('sending message from solver content script', e,sol, chrome)
-        chrome.runtime.sendMessage(sol, function(response) {
-            console.log('resp', response)
-        })
+        chrome.runtime.sendMessage(solve())
     }
 })
 
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    let gameState;
     try {
-        gameState = JSON.parse(localStorage.gameState);
-        console.log('Game State', gameState);
-        let possible = solve(gameState);
+        let possible = solve();
         let suggestion = possible[0];
-        console.log(`sug ${suggestion} poss ${possible}`)
-        console.log('req', request, 'word', ANSWER_WORDS[0], sender, sendResponse)
-        console.log(localStorage.gameState)
-        sendResponse({suggestion, possible})
+        sendResponse({ suggestion, possible })
     } catch (e) {
         console.error("encountered JSON parse error", e);
     }
 });
+
+// Run when wordle page first opens
+chrome.runtime.sendMessage(solve());
