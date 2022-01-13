@@ -9,3 +9,5 @@ You can install the Chrome extension [here](), or you can download the code and 
 ### Usage
 The extension will narrow down the possible words based on the game state. Click on the extension to see the count and list of possible answer words remaining. The extension will update as enter a guess as well.
 
+https://user-images.githubusercontent.com/6826622/149270872-103e1a2a-3bea-42cd-8289-cd5799da8544.mp4
+
