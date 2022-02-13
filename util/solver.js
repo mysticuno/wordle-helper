@@ -82,8 +82,9 @@ function getPossibleWords({
 }
 
 // Given the game state, compute the list of possible words
+// TODO: Use dark mode in popup?
 function solve() {
-    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState);
+    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState || window.localStorage['nyt-wordle-state']);
     let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] };
     for (let [guessNum, guess] of boardState.entries()) {
         if (guess === '') continue;
