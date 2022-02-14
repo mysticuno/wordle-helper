@@ -31,7 +31,7 @@
                 "https://www.nytimes.com/games/wordle/*"
             ],
             "js": [
-                "./util/wordlist.js",
+                "./util/constants.js",
                 "./util/solver.js"
             ]
         }

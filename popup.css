@@ -1,5 +1,4 @@
 body {
-  color: #538d4e;
   width: 300px;
   font-size: 16px;
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
@@ -17,10 +16,27 @@ body {
 }
 
 #possible>a:link, #possible>a:visited {
+  /*TODO: Make icon and colors persist?*/
   color: #538d4e;
   text-decoration: none;
 }
 
 #possible>a:hover {
   text-decoration: underline;
+}
+
+.darkmode {
+  background-color: #121213;
+}
+
+.lightmode {
+  background-color: none;
+}
+
+.nocontrast {
+  color: #538d4e;
+}
+
+.highcontrast {
+  color: #f5793a;
 }

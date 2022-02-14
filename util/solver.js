@@ -81,23 +81,31 @@ function getPossibleWords({
     return intersection(present, intersection(correct, absent));
 }
 
+// Get whether the user has dark mode and high contrast mode enabled
+function getColorSettings() {
+    // Settings for dark mode and high contrast are undefined until explicitly toggled
+    return {
+        DarkMode: JSON.parse(window.localStorage[DarkModeSetting] ?? false),
+        HighContrast: JSON.parse(window.localStorage[HighContrastSetting] ?? false)
+    };
+}
+
 // Given the game state, compute the list of possible words
-// TODO: Use dark mode in popup?
 function solve() {
-    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState || window.localStorage['nyt-wordle-state']);
+    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState || window.localStorage[WordleState]);
     let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] };
     for (let [guessNum, guess] of boardState.entries()) {
         if (guess === '') continue;
         for (let [index, evaluation] of evaluations[guessNum].entries()) {
             let letter = guess[index];
             switch (evaluation) {
-                case "correct":
+                case States.CORRECT:
                     state.correctLetters[index] = letter;
                     break;
-                case "present":
+                case States.PRESENT:
                     state.presentLetters.add(letter);
                     break;
-                case "absent":
+                case States.ABSENT:
                     // edge case with multiple letters
                     if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
                         state.absentLetters.add(letter);
@@ -112,19 +120,26 @@ function solve() {
 // Listen to keyboard enters to update
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
-        chrome.runtime.sendMessage(solve());
+        chrome.runtime.sendMessage({
+            possible: solve(), 
+            settings: getColorSettings()
+        });
     }
 })
 
+// Listen to message from popup.js and respond
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     try {
         let possible = solve();
-        let suggestion = possible[0];
-        sendResponse({ suggestion, possible });
+        let settings = getColorSettings();
+        sendResponse({ possible, settings });
     } catch (e) {
         console.error("encountered JSON parse error", e);
     }
 });
 
 // Run when wordle page first opens
-chrome.runtime.sendMessage(solve());
+chrome.runtime.sendMessage({
+    possible: solve(), 
+    settings: getColorSettings()
+});
