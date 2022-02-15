@@ -16,7 +16,6 @@ body {
 }
 
 #possible>a:link, #possible>a:visited {
-  /*TODO: Make icon and colors persist?*/
   color: #538d4e;
   text-decoration: none;
 }

@@ -16,11 +16,20 @@ function choice(arr) {
 }
 
 // Return words that contain the present letters
-function getWordsWithPresentLetters(presentLetters = []) {
+function getWordsWithPresentLetters(presentLetters = new Map()) {
     return new Set(ANSWER_WORDS.filter(word => {
-        for (const letter of presentLetters) {
+        for (const [letter, locations] of presentLetters) {
+            // Remove words that don't have the present letter
             if (!(word.includes(letter))) {
                 return false;
+            }
+            // If they do have the present letter, remove words that have a present letter
+            // in a location that has been guessed, e.g. if the word is AROMA, the guess is 
+            // TRAIN, do not include words that have A in the 3rd slot like GRASS
+            for (const index of locations) {
+                if (word[index] == letter) {
+                    return false;
+                }
             }
         }
         return true;
@@ -54,7 +63,7 @@ function getWordsWithoutAbsentLetters(absentLetters = []) {
 // Simulate one turn of Wordle, useful for testing
 function gameResult(answer, guess, gameState = {
     absentLetters: new Set(),
-    presentLetters: new Set(),
+    presentLetters: new Map(),
     correctLetters: [' ', ' ', ' ', ' ', ' '] // default to empty
 }) {
     for (let [index, letter] of guess.split('').entries()) {
@@ -63,7 +72,9 @@ function gameResult(answer, guess, gameState = {
         } else if (answer[index] === letter) {
             gameState.correctLetters[index] = letter;
         } else {
-            gameState.presentLetters.add(letter);
+            let presentLocations = gameState.presentLetters.get(letter) ?? [];
+            presentLocations.push(index);
+            gameState.presentLetters.set(letter, presentLocations);
         }
     }
     return gameState;
@@ -72,7 +83,7 @@ function gameResult(answer, guess, gameState = {
 // Get possible guess words given the current state
 function getPossibleWords({
     absentLetters = new Set(),
-    presentLetters = new Set(),
+    presentLetters = new Map(),
     correctLetters = [' ', ' ', ' ', ' ', ' '] // default to empty
 } = {}) {
     absent = getWordsWithoutAbsentLetters(absentLetters);
@@ -93,7 +104,11 @@ function getColorSettings() {
 // Given the game state, compute the list of possible words
 function solve() {
     let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState || window.localStorage[WordleState]);
-    let state = { absentLetters: new Set(), presentLetters: new Set(), correctLetters: [' ', ' ', ' ', ' ', ' '] };
+    let state = {
+        absentLetters: new Set(),
+        presentLetters: new Map(),
+        correctLetters: [' ', ' ', ' ', ' ', ' ']
+    };
     for (let [guessNum, guess] of boardState.entries()) {
         if (guess === '') continue;
         for (let [index, evaluation] of evaluations[guessNum].entries()) {
@@ -103,7 +118,9 @@ function solve() {
                     state.correctLetters[index] = letter;
                     break;
                 case States.PRESENT:
-                    state.presentLetters.add(letter);
+                    let presentLocations = state.presentLetters.get(letter) ?? [];
+                    presentLocations.push(index);
+                    state.presentLetters.set(letter, presentLocations);
                     break;
                 case States.ABSENT:
                     // edge case with multiple letters
