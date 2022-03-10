@@ -13,7 +13,7 @@ https://user-images.githubusercontent.com/6826622/154155028-9e1221c9-7afb-4788-a
 You can download the Chrome extension **[here](https://chrome.google.com/webstore/detail/wordle-helper/lcoapaclmojlnbjipmpfibcjomncgdod)**, or you can clone the repo and load it as an **[unpacked extension](https://developer.chrome.com/docs/extensions/mv3/getstarted/)**. Please leave a review if you enjoy the extension!
 
 Both **dark mode** and **high contrast mode** are supported based on the settings used on Wordle.
-<p style="float:left">
-  <img src="https://user-images.githubusercontent.com/6826622/155425400-794255f9-0de2-4305-a804-6dcba9c5ab47.png" width="500" height="500">
-  <img src="https://user-images.githubusercontent.com/6826622/155425401-90599b33-e631-4fec-82a2-35240b7fd2ea.png" width="500" height="500">
-</p>
+
+![](https://user-images.githubusercontent.com/6826622/155425400-794255f9-0de2-4305-a804-6dcba9c5ab47.png)
+
+![](https://user-images.githubusercontent.com/6826622/155425401-90599b33-e631-4fec-82a2-35240b7fd2ea.png)
