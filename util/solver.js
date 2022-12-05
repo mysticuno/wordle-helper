@@ -146,7 +146,7 @@ function solve() {
 document.addEventListener('keyup', async (e) => {
     if (e.key === 'Enter') {
         // Wait 2 seconds for the animation to finish before updating state
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 1800));
 
         chrome.runtime.sendMessage({
             possible: solve(), 

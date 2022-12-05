@@ -47,15 +47,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const numWords = document.getElementById('numWords');
   const possibleHTML = document.getElementById('possible');
 
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  // Send empty message to solver.js to get state and update
-  await chrome.tabs.sendMessage(tab.id, {}, ({ possible={}, settings={} }) => {
-    shuffleArray(possible);
-    numWords.innerHTML = `${possible.length} possible word${possible.length > 1 ? 's' : ''}`;
-    const suggestions = possible.map(word => `${word.toUpperCase()}`).join(', ');
-    possibleHTML.innerHTML = suggestions;
-
-    updateIcon(settings, possible.length, tab.id);
-    updateColors(settings);
+  let [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+    url: "https://www.nytimes.com/games/wordle/index.html"
   });
+
+  // Try to get results only if on NYT page
+  if (tab) {
+    // Send empty message to solver.js to get state and update
+    await chrome.tabs.sendMessage(tab.id, {}, ({ possible={}, settings={} }) => {
+      shuffleArray(possible);
+      numWords.innerHTML = `${possible.length} possible word${possible.length > 1 ? 's' : ''}`;
+      const suggestions = possible.map(word => `${word.toUpperCase()}`).join(', ');
+      possibleHTML.innerHTML = suggestions;
+
+      updateIcon(settings, possible.length, tab.id);
+      updateColors(settings);
+    });
+  }
 })
