@@ -17,3 +17,11 @@ Both **dark mode** and **high contrast mode** are supported based on the setting
 ![](https://user-images.githubusercontent.com/6826622/155425400-794255f9-0de2-4305-a804-6dcba9c5ab47.png)
 
 ![](https://user-images.githubusercontent.com/6826622/155425401-90599b33-e631-4fec-82a2-35240b7fd2ea.png)
+
+### Updating the extension (Chrome Web Store)
+Once the extension is ready for publishing, you need to zip the file up for upload to the Chrome Web Store via the Developer Console, which can be done via the following command from the project root:
+```
+zip wordle-helper.zip -r * -x .git/* -x *.png -x LICENSE -x README.md
+```
+
+From there upload the zip file to the devconsole and begin the review process. Don't forget to bump the version number in [manifest.json](manifest.json)!
