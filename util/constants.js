@@ -6,11 +6,11 @@ const ANSWER_WORDS = [
 const States = Object.freeze({
     CORRECT: "correct",
     PRESENT: "present",
-    ABSENT: "absent"
+    ABSENT: "absent",
+    EMPTY: "empty"
 });
 
-const DarkModeSetting = "nyt-wordle-darkmode";
-
-const HighContrastSetting = "nyt-wordle-cbmode";
-
-const WordleState = "nyt-wordle-state";
+// New vars from moving to NYT
+const WordleSettingsKey = "nyt-wordle-moogle/ANON";
+const DarkModeSetting = "darkMode";
+const HighContrastSetting = "colorblindMode";

@@ -95,24 +95,32 @@ function getPossibleWords({
 // Get whether the user has dark mode and high contrast mode enabled
 function getColorSettings() {
     // Settings for dark mode and high contrast are undefined until explicitly toggled
+    let settings = JSON.parse(window.localStorage[WordleSettingsKey]).settings;
     return {
-        DarkMode: JSON.parse(window.localStorage[DarkModeSetting] ?? false),
-        HighContrast: JSON.parse(window.localStorage[HighContrastSetting] ?? false)
+        DarkMode: settings.darkMode ?? false,
+        HighContrast: settings.colorblindMode ?? false
     };
 }
 
 // Given the game state, compute the list of possible words
 function solve() {
-    let { boardState = [], evaluations = [] } = JSON.parse(window.localStorage.gameState || window.localStorage[WordleState]);
+    // NYT no longer stores the game state in local stoarage, so we must determine
+    // the game state based on the HTML classes
+    let guesses = Array.from(document.querySelectorAll('[data-state]')).slice(0,30).map(item => item.ariaLabel);
+
+    // Change 1x30 array into 6x5 array
+    let boardState = guesses.reduce((rows, key, index) => (index % 5 == 0 ? rows.push([key]) : rows[rows.length-1].push(key)) && rows, []);
+
     let state = {
         absentLetters: new Set(),
         presentLetters: new Map(),
         correctLetters: [' ', ' ', ' ', ' ', ' ']
     };
-    for (let [guessNum, guess] of boardState.entries()) {
-        if (guess === '') continue;
-        for (let [index, evaluation] of evaluations[guessNum].entries()) {
-            let letter = guess[index];
+    for (let row of boardState) {
+        for (let [index, guess] of row.entries()) {
+            if (guess === States.EMPTY) break; // We can stop as soon as we see one empty box
+
+            let [letter, evaluation] = guess.split(' ');
             switch (evaluation) {
                 case States.CORRECT:
                     state.correctLetters[index] = letter;
@@ -135,8 +143,11 @@ function solve() {
 }
 
 // Listen to keyboard enters to update
-document.addEventListener('keyup', (e) => {
+document.addEventListener('keyup', async (e) => {
     if (e.key === 'Enter') {
+        // Wait 2 seconds for the animation to finish before updating state
+        await new Promise(r => setTimeout(r, 2000));
+
         chrome.runtime.sendMessage({
             possible: solve(), 
             settings: getColorSettings()
