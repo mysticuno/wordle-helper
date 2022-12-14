@@ -5,6 +5,7 @@
 
 ## Demo
 The extension will narrow down the possible words based on the game state. Click on the extension to see the count and list of possible answer words remaining. The list of possible answers will update as you enter guesses.
+![Wordle GIF Demo](https://user-images.githubusercontent.com/6826622/207509813-c3d722d8-4274-4455-9bf2-47264a2639ff.gif)
 
 https://user-images.githubusercontent.com/6826622/154155028-9e1221c9-7afb-4788-abfc-e8a40b6ccac7.mp4
 
