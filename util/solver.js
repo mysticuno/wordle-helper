@@ -118,9 +118,9 @@ function solve() {
     };
     for (let row of boardState) {
         for (let [index, guess] of row.entries()) {
-            if (guess === States.EMPTY) break; // We can stop as soon as we see one empty box
+            let [position, letter, evaluation] = guess.toLowerCase().split(', ');
 
-            let [letter, evaluation] = guess.split(' ');
+            if (letter === States.EMPTY) break; // We can stop as soon as we see one empty box
             switch (evaluation) {
                 case States.CORRECT:
                     state.correctLetters[index] = letter;

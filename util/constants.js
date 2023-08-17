@@ -5,7 +5,7 @@ const ANSWER_WORDS = [
 
 const States = Object.freeze({
     CORRECT: "correct",
-    PRESENT: "present",
+    PRESENT: "present in another position",
     ABSENT: "absent",
     EMPTY: "empty"
 });
