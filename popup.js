@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true,
-    url: "https://www.nytimes.com/games/wordle/index.html"
+    url: "https://www.nytimes.com/games/wordle/index.html*"
   });
 
   // Try to get results only if on NYT page
@@ -67,3 +67,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 })
+
