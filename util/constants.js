@@ -7,7 +7,7 @@ const States = Object.freeze({
     CORRECT: "correct",
     PRESENT: "present in another position",
     ABSENT: "absent",
-    EMPTY: "empty"
+    EMPTY:  "1st letter, empty"
 });
 
 // New vars from moving to NYT

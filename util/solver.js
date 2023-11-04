@@ -27,7 +27,7 @@ function getWordsWithPresentLetters(presentLetters = new Map()) {
             // in a location that has been guessed, e.g. if the word is AROMA, the guess is 
             // TRAIN, do not include words that have A in the 3rd slot like GRASS
             for (const index of locations) {
-                if (word[index] == letter) {
+                if (word[index] === letter) {
                     return false;
                 }
             }
@@ -104,7 +104,7 @@ function getColorSettings() {
 
 // Given the game state, compute the list of possible words
 function solve() {
-    // NYT no longer stores the game state in local stoarage, so we must determine
+    // NYT no longer stores the game state in local storage, so we must determine
     // the game state based on the HTML classes
     let guesses = Array.from(document.querySelectorAll('[data-state]')).slice(0,30).map(item => item.ariaLabel);
 
@@ -116,26 +116,30 @@ function solve() {
         presentLetters: new Map(),
         correctLetters: [' ', ' ', ' ', ' ', ' ']
     };
-    for (let row of boardState) {
-        for (let [index, guess] of row.entries()) {
-            let [position, letter, evaluation] = guess.toLowerCase().split(', ');
 
-            if (letter === States.EMPTY) break; // We can stop as soon as we see one empty box
-            switch (evaluation) {
-                case States.CORRECT:
-                    state.correctLetters[index] = letter;
-                    break;
-                case States.PRESENT:
-                    let presentLocations = state.presentLetters.get(letter) ?? [];
-                    presentLocations.push(index);
-                    state.presentLetters.set(letter, presentLocations);
-                    break;
-                case States.ABSENT:
-                    // edge case with multiple letters
-                    if (!state.presentLetters.has(letter) && !state.correctLetters.includes(letter)) {
-                        state.absentLetters.add(letter);
-                    }
-                    break;
+    for (let row of boardState) {
+        if (row[0] === States.EMPTY) break; // We can stop as soon as we see one empty box
+        // Evaluate correct letters first
+        for (let [index, guess] of row.entries()) {
+            let [, letter, evaluation] = guess.toLowerCase().split(', ');
+            if (evaluation !== States.CORRECT) continue;
+            state.correctLetters[index] = letter;
+        }
+        // Then evaluate present letters
+        for (let [index, guess] of row.entries()) {
+            let [, letter, evaluation] = guess.toLowerCase().split(', ');
+            if (evaluation !== States.PRESENT) continue;
+            let presentLocations = state.presentLetters.get(letter) ?? [];
+            presentLocations.push(index);
+            state.presentLetters.set(letter, presentLocations);
+        }
+        // Finally evaluate absent letters
+        for (let guess of row) {
+            let [, letter, evaluation] = guess.toLowerCase().split(', ');
+            if (evaluation !== States.ABSENT) continue;
+            // edge case with multiple letters
+            if (!state.correctLetters.includes(letter) && !state.presentLetters.has(letter)) {
+                state.absentLetters.add(letter);
             }
         }
     }
