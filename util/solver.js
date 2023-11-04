@@ -84,18 +84,24 @@ function gameResult(answer, guess, gameState = {
 function getPossibleWords({
     absentLetters = new Set(),
     presentLetters = new Map(),
-    correctLetters = [' ', ' ', ' ', ' ', ' '] // default to empty
+    correctLetters = [' ', ' ', ' ', ' ', ' '], // default to empty
+    priorGuesses = new Set()
 } = {}) {
-    absent = getWordsWithoutAbsentLetters(absentLetters);
-    present = getWordsWithPresentLetters(presentLetters);
-    correct = getWordsWithCorrectLetters(correctLetters);
-    return intersection(present, intersection(correct, absent));
+    const absent = getWordsWithoutAbsentLetters(absentLetters);
+    const present = getWordsWithPresentLetters(presentLetters);
+    const correct = getWordsWithCorrectLetters(correctLetters);
+    const possible = intersection(present, intersection(correct, absent));
+    // Remove already guessed words if necessary
+    if (possible.size > 1) {
+        priorGuesses.forEach(word => possible.delete(word));
+    }
+    return possible;
 }
 
 // Get whether the user has dark mode and high contrast mode enabled
 function getColorSettings() {
     // Settings for dark mode and high contrast are undefined until explicitly toggled
-    let settings = JSON.parse(window.localStorage[WordleSettingsKey]).settings;
+    const settings = JSON.parse(window.localStorage[WordleSettingsKey]).settings ?? {};
     return {
         DarkMode: settings.darkMode ?? false,
         HighContrast: settings.colorblindMode ?? false
@@ -114,17 +120,24 @@ function solve() {
     let state = {
         absentLetters: new Set(),
         presentLetters: new Map(),
-        correctLetters: [' ', ' ', ' ', ' ', ' ']
+        correctLetters: [' ', ' ', ' ', ' ', ' '],
+        priorGuesses: new Set()
     };
 
     for (let row of boardState) {
         if (row[0] === States.EMPTY) break; // We can stop as soon as we see one empty box
         // Evaluate correct letters first
+        let wordBuilder = []
         for (let [index, guess] of row.entries()) {
             let [, letter, evaluation] = guess.toLowerCase().split(', ');
+            wordBuilder.push(letter)
             if (evaluation !== States.CORRECT) continue;
             state.correctLetters[index] = letter;
         }
+
+        // Build word and keep track of it so as to not recommend again
+        state.priorGuesses.add(wordBuilder.join(''))
+
         // Then evaluate present letters
         for (let [index, guess] of row.entries()) {
             let [, letter, evaluation] = guess.toLowerCase().split(', ');

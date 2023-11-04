@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Send empty message to solver.js to get state and update
     await chrome.tabs.sendMessage(tab.id, {}, ({ possible={}, settings={} }) => {
       shuffleArray(possible);
-      numWords.innerHTML = `${possible.length} possible word${possible.length > 1 ? 's' : ''}`;
+      numWords.innerHTML = `${possible.length} possible word${possible.length === 1 ? '' : 's'}`;
       const suggestions = possible.map(word => `${word.toUpperCase()}`).join(', ');
       possibleHTML.innerHTML = suggestions;
 

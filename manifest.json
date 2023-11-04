@@ -1,7 +1,7 @@
 {
     "name": "Wordle Helper",
     "description": "An extension to help you solve Wordles",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "manifest_version": 3,
     "background": {
         "service_worker": "background.js"
