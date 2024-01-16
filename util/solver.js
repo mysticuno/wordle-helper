@@ -101,6 +101,7 @@ function getPossibleWords({
 // Get whether the user has dark mode and high contrast mode enabled
 function getColorSettings() {
     // Settings for dark mode and high contrast are undefined until explicitly toggled
+    const WordleSettingsKey = Object.keys(window.localStorage).filter(s => s.startsWith(WordleSettingsPrefix))[0]
     const settings = JSON.parse(window.localStorage[WordleSettingsKey]).settings ?? {};
     return {
         DarkMode: settings.darkMode ?? false,

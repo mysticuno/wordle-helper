@@ -11,6 +11,6 @@ const States = Object.freeze({
 });
 
 // New vars from moving to NYT
-const WordleSettingsKey = "nyt-wordle-moogle/ANON";
+const WordleSettingsPrefix = "nyt-wordle-moogle";
 const DarkModeSetting = "darkMode";
 const HighContrastSetting = "colorblindMode";
