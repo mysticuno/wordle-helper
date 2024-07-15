@@ -102,10 +102,14 @@ function getPossibleWords({
 function getColorSettings() {
     // Settings for dark mode and high contrast are undefined until explicitly toggled
     const WordleSettingsKey = Object.keys(window.localStorage).filter(s => s.startsWith(WordleSettingsPrefix))[0]
-    const settings = JSON.parse(window.localStorage[WordleSettingsKey]).settings ?? {};
+    const settingsString = window.localStorage[WordleSettingsKey] ?? "{}";
+    const settings = JSON.parse(settingsString) ?? {};
+    // The settings object is now an object of the form {states: [{data: {darkMode: true}}]}
+    const DarkMode = settings?.states?.[0]?.data?.darkMode ?? false;
+    const HighContrast = settings?.states?.[0]?.data?.colorblindMode ?? false;
     return {
-        DarkMode: settings.darkMode ?? false,
-        HighContrast: settings.colorblindMode ?? false
+        DarkMode,
+        HighContrast
     };
 }
 
