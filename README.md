@@ -15,7 +15,7 @@ https://user-images.githubusercontent.com/6826622/154155028-9e1221c9-7afb-4788-a
 
 
 ### Setup
-You can download the Chrome extension **[here](https://chrome.google.com/webstore/detail/wordle-helper/lcoapaclmojlnbjipmpfibcjomncgdod)**, or you can clone the repo and load it as an **[unpacked extension](https://developer.chrome.com/docs/extensions/mv3/getstarted/)**. Please [leave a review](https://chromewebstore.google.com/detail/wordle-helper/lcoapaclmojlnbjipmpfibcjomncgdod/reviews) if you enjoy the extension!
+You can download the Chrome extension **[here](https://chrome.google.com/webstore/detail/wordle-helper/lcoapaclmojlnbjipmpfibcjomncgdod)**, or you can clone the repo and load it as an **[unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)**. Please [leave a review](https://chromewebstore.google.com/detail/wordle-helper/lcoapaclmojlnbjipmpfibcjomncgdod/reviews) if you enjoy the extension!
 
 Both **dark mode** and **high contrast mode** are supported based on the settings used on Wordle.
 
@@ -24,9 +24,10 @@ Both **dark mode** and **high contrast mode** are supported based on the setting
 ![Wordle and extension in high contrast mode](https://user-images.githubusercontent.com/6826622/155425401-90599b33-e631-4fec-82a2-35240b7fd2ea.png)
 
 ### Updating the extension (Chrome Web Store)
-Once the extension is ready for publishing, you need to zip the file up for upload to the Chrome Web Store via the Developer Console, which can be done via the following command from the project root:
-```
-zip wordle-helper.zip -r * -x .git/* -x *.png -x LICENSE -x README.md
+Once the extension is ready for publishing, you need to `zip` the file up for upload to the [Chrome Web Store](https://chromewebstore.google.com/) via the [Developer Console](https://chrome.google.com/webstore/devconsole/), which can be done via the following command from the project root:
+
+```bash
+npm install && npm run build:chrome
 ```
 
-From there upload the zip file to the devconsole and begin the review process. Don't forget to bump the version number in [manifest.json](manifest.json)!
+The resulting `wordle-helper-chrome.zip` file will be in the `dist` folder. From there upload the zip file to the developer console and begin the review process. Don't forget to bump the version number in [manifests/manifest.chrome.json](manifest.chrome.json) before bundling!

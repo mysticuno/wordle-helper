@@ -1,2 +1,4 @@
 /*.png
 *.swp
+node_modules/
+dist/

@@ -1,0 +1,19 @@
+{
+  "name": "wordle-helper",
+  "version": "3.0.0",
+  "scripts": {
+    "build": "npm run build:chrome && npm run build:firefox",
+    "build:chrome": "node build.js chrome",
+    "build:firefox": "node build.js firefox",
+    "start": "npm run build",
+    "test": "echo \"No tests specified\" && exit 0",
+    "clean": "rm -rf dist && rm -f wordle-helper-*.zip"
+  },
+  "devDependencies": {
+    "archiver": "^7.0.1"
+  },
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "type": "module"
+}

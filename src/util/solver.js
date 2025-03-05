@@ -1,3 +1,5 @@
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
+
 // Util for set intersections
 function intersection(setA, setB) {
     let _intersection = new Set();
@@ -170,7 +172,7 @@ document.addEventListener('keyup', async (e) => {
         // Wait 2 seconds for the animation to finish before updating state
         await new Promise(r => setTimeout(r, 1800));
 
-        chrome.runtime.sendMessage({
+        browserAPI.runtime.sendMessage({
             possible: solve(), 
             settings: getColorSettings()
         });
@@ -178,7 +180,7 @@ document.addEventListener('keyup', async (e) => {
 })
 
 // Listen to message from popup.js and respond
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
     try {
         let possible = solve();
         let settings = getColorSettings();
@@ -189,7 +191,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Run when wordle page first opens
-chrome.runtime.sendMessage({
+browserAPI.runtime.sendMessage({
     possible: solve(), 
     settings: getColorSettings()
 });
