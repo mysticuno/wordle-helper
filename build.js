@@ -10,6 +10,7 @@ const imagesDir = path.join(__dirname, 'images');
 
 // Function to create the zip archive
 const createZipArchive = (sourceDir, outputZip) => {
+  return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(outputZip);
     const archive = archiver('zip', {
       zlib: { level: 9 }, // Highest compression level
@@ -18,7 +19,17 @@ const createZipArchive = (sourceDir, outputZip) => {
     archive.pipe(output);
     archive.directory(sourceDir, false);
     archive.finalize();
-  };
+
+    output.on('close', () => {
+      resolve();
+    });
+
+    output.on('error', (err) => {
+      console.error(`❌ Error creating zip archive: ${err}`);
+      reject(err);
+    });
+  });
+};
 
 async function buildExtension(browser) {
   const browserDistDir = path.join(distDir, browser);
@@ -35,8 +46,10 @@ async function buildExtension(browser) {
   ]);
 
   // Create the zip archive for the extension
-  const outputZip = path.join(__dirname, 'dist', `wordle-helper-${browser}.zip`);
-  createZipArchive(browserDistDir, outputZip);
+  const zipName = `wordle-helper-${browser}.zip`
+  const outputZip = path.join(__dirname, 'dist', zipName);
+  await createZipArchive(browserDistDir, outputZip);
+  fs.copyFileSync(outputZip, path.join(__dirname, zipName));
 
   console.log(`✅ ${browser} extension built successfully! Packaged into ${outputZip}`);
 }

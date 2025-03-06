@@ -23,11 +23,21 @@ Both **dark mode** and **high contrast mode** are supported based on the setting
 
 ![Wordle and extension in high contrast mode](https://user-images.githubusercontent.com/6826622/155425401-90599b33-e631-4fec-82a2-35240b7fd2ea.png)
 
-### Updating the extension (Chrome Web Store)
+### Updating and publishing
+#### Chrome Web Store
 Once the extension is ready for publishing, you need to `zip` the file up for upload to the [Chrome Web Store](https://chromewebstore.google.com/) via the [Developer Console](https://chrome.google.com/webstore/devconsole/), which can be done via the following command from the project root:
 
 ```bash
 npm install && npm run build:chrome
 ```
 
-The resulting `wordle-helper-chrome.zip` file will be in the `dist` folder. From there upload the zip file to the developer console and begin the review process. Don't forget to bump the version number in [manifests/manifest.chrome.json](manifest.chrome.json) before bundling!
+The resulting `wordle-helper-chrome.zip` file will be in the `dist` folder, as well as the project root so that it can be committed to source. From there, upload the zip file to the developer console and begin the review process. Don't forget to bump the version number in [manifest.chrome.json](manifests/manifest.chrome.json) before bundling!
+
+#### Firefox Add-Ons
+Once the add-on is ready to be published, you need to `zip` the file up for upload to [AMO](https://addons.mozilla.org) similar to the process above:
+
+```bash
+npm install && npm run build:firefox
+```
+
+The resulting `wordle-helper-firefox.zip` file will be in the `dist` folder, as well as the project root so that it can be committed to source. From there, upload the zip file to the developer hub to begin the review process. Don't forget to bump the version number in [manifest.firefox.json](manifests/manifest.firefox.json) before bundling!

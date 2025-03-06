@@ -14,6 +14,7 @@ browserAPI.runtime.onMessage.addListener(
           "16": `/images/icon-16${hc ? '-hc' : ''}.png`,
           "32": `/images/icon-32${hc ? '-hc' : ''}.png`,
           "48": `/images/icon-48${hc ? '-hc' : ''}.png`,
+          "64": `/images/icon-64${hc ? '-hc' : ''}.png`,
           "128": `/images/icon-128${hc ? '-hc' : ''}.png`
         },
         tabId: sender.tab.id
