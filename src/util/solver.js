@@ -213,21 +213,11 @@ function getGuessesFromDOM() {
     try {
         // NYT no longer stores the game state in local storage, so we must determine
         // the game state based on the HTML classes
-        const elements = document.querySelectorAll('[data-state]');
-        if (!elements.length) {
-            console.warn('No game state elements found');
-            return [];
-        }
+        const elements = document.querySelectorAll('[aria-roledescription="tile"]');
 
         return Array.from(elements)
             .slice(0, GAME_CONFIG.MAX_DOM_ELEMENTS)
-            .map(item => {
-                if (!item.ariaLabel) {
-                    console.warn('Element missing ariaLabel');
-                    return null;
-                }
-                return item.ariaLabel;
-            })
+            .map(item => item.ariaLabel)
             .filter(Boolean);
     } catch (error) {
         console.error('Error getting guesses from DOM:', error);
